@@ -8,7 +8,8 @@ const { registerUser, addToken } = require("../mysql/queries");
 
 router.post("/", async (req, res) => {
   //   console.log("Winner: ", req.body);
-  let { email, password } = req.body;
+  let { email, password, first_name, second_name } = req.body;
+  console.log(req.body);
 
   if (!email || !password) {
     res.status(400).send("Bad Request, Missing data ");
@@ -19,7 +20,9 @@ router.post("/", async (req, res) => {
   //   //why not login at the same time
 
   try {
-    const result = await asyncMySQL(registerUser(email, password));
+    const result = await asyncMySQL(
+      registerUser(email, password, first_name, second_name)
+    );
     console.log("token:" + token);
     console.log(result.insertId);
     await asyncMySQL(addToken(result.insertId, token));

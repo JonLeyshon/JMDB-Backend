@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
                                       WHERE email LIKE "${email}" 
                                         AND password LIKE "${password}";`);
 
-  if (results.length > 0) {
+  if (results.length === 1) {
     const token = getRandom();
 
     await asyncMySQL(`INSERT INTO sessions
@@ -21,11 +21,11 @@ router.post("/", async (req, res) => {
                              VALUES
                                (${results[0].id}, "${token}");`);
 
-    res.send({ status: 1, token });
+    res.send({ status: 200, token });
     return;
   }
 
-  res.send({ status: 0, reason: "Bad creds!" });
+  res.send({ status: 400, reason: "Bad creds!" });
 });
 
 module.exports = router;

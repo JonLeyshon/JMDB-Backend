@@ -1,15 +1,15 @@
 const { asyncMySQL } = require("../mysql/driver");
-const { checkToken } = require("../mysql/queries");
+const { checkToken, deleteContent, checkContent } = require("../mysql/queries");
 
 async function checkIsUser(req, res, next) {
-  console.log(req.headers.token);
   const results = await asyncMySQL(checkToken(req.headers.token));
   if (results.length) {
     next();
-    return;
+    return results;
+    // check this return change doesn't afffect other routes
   }
 
-  res.send({ status: 0, reason: "Bad token" });
+  res.send({ status: 400, reason: "Bad token" });
 }
 
 module.exports = { checkIsUser };
